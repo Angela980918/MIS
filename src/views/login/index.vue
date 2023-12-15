@@ -21,7 +21,7 @@
 									</el-form-item>
 									<div class="login-footer">
 										<div class="forget-password">
-											<span class="forget-password-btn">忘记密码</span>
+											<span class="forget-password-btn" @click="openForget">忘记密码</span>
 										</div>
 										<div class="login-btn">
 											<el-button type="primary">登录</el-button>
@@ -63,12 +63,14 @@
 			</el-footer>
 		</el-container>
 	</div>
+	<forgetPassword ref='forgetV'></forgetPassword>
 </template>
 
 <script lang="ts" setup>
+	import forgetPassword from './component/forgetPassword.vue'
 	import { ref, reactive } from 'vue'
-	import type { TabsPaneContext } from 'element-plus'
 
+	const forgetV = ref()
 	const activeName = ref('first')
 
 	// 表单接口
@@ -91,9 +93,14 @@
 		nextPassword: '', //确认密码
 	})
 
+	// 忘记密码弹窗
+	const openForget = () => {
+		forgetV.value.open()
+	}
 
-	const handleClick = (tab : TabsPaneContext, event : Event) => {
-		console.log(tab, event)
+	// 
+	const handleClick = () => {
+		console.log("111");
 	}
 </script>
 
@@ -143,9 +150,9 @@
 					.login-footer {
 						display: flex;
 						flex-direction: column;
-						
+
 						// 登录按钮
-						.login-btn{
+						.login-btn {
 							display: flex;
 							justify-content: center;
 						}
@@ -179,11 +186,12 @@
 						}
 					}
 				}
-			
+
 				// 注册表单
-				.register-form{
+				.register-form {
+
 					// 注册按钮
-					.register-btn{
+					.register-btn {
 						display: flex;
 						justify-content: center;
 					}
