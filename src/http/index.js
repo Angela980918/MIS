@@ -9,7 +9,7 @@ const instance = axios.create({
 	timeout: 6000,
 	// 请求头类型
 	headers: {
-		'Content-Type': 'application/x-www-form-urlencodeed'
+		'Content-Type': 'application/x-www-form-urlencoded'
 	}
 });
 
