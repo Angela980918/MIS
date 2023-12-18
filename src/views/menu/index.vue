@@ -5,7 +5,8 @@
 			<el-aside width="200px">
 				<el-menu class="el-menu-vertical-demo" router>
 					<span class="menu-title">MIS</span>
-					<el-menu-item index="home"> <el-icon>
+					<el-menu-item index="home">
+						<el-icon>
 							<House />
 						</el-icon>
 						<span>首页</span>
@@ -96,6 +97,20 @@
 							</el-icon>
 						</el-badge>
 						<el-avatar :size="24" :src="circleUrl" />
+						<el-dropdown>
+							<span class="el-dropdown-link">
+								<el-icon>
+									<Setting />
+								</el-icon>
+							</span>
+							<template #dropdown>
+								<el-dropdown-menu>
+									<el-dropdown-item>设置账号</el-dropdown-item>
+									<el-dropdown-item>更改头像</el-dropdown-item>
+									<el-dropdown-item>退出登录</el-dropdown-item>
+								</el-dropdown-menu>
+							</template>
+						</el-dropdown>
 					</div>
 				</el-header>
 				<el-main>
@@ -110,15 +125,20 @@
 	import {
 		Menu as IconMenu,
 	} from '@element-plus/icons-vue'
-	import { ref, reactive, toRefs } from 'vue'
+	import {
+		ref,
+		reactive,
+		toRefs
+	} from 'vue'
 	const state = reactive({
-		circleUrl:
-			'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
-		squareUrl:
-			'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
-		sizeList: ['small', '', 'large'] as const,
+		circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+		squareUrl: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
+		sizeList: ['small', '', 'large'] as
+		const,
 	})
-	const { circleUrl } = toRefs(state)
+	const {
+		circleUrl
+	} = toRefs(state)
 </script>
 
 <style lang="scss" scoped>
@@ -152,6 +172,28 @@
 				color: #fff;
 			}
 
+		}
+	}
+
+	// 头部
+	.el-header {
+		display: flex;
+		height: 55px;
+		background: #262f3e;
+		color: #c1c6c8;
+		align-items: center;
+		justify-content: space-between;
+
+		// 欢迎语
+		.header-left-content {
+			font-size: 14px;
+		}
+
+		.header-right-content {
+			width: 160px;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
 		}
 	}
 
