@@ -1,4 +1,5 @@
 <template>
+	<!-- 忘记密码 -->
 	<el-dialog v-model="state.forgetPasswordDialog" title="忘记密码" width="400px" align-center center>
 		<el-form :rules="rules" class="forget-form" :label-position="labelposition">
 			<el-form-item label="账号" prop="account">
@@ -12,9 +13,31 @@
 		<!-- 底部内容 -->
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button>Cancel</el-button>
-				<el-button type="primary">
-					Confirm
+				<el-button @click="state.forgetPasswordDialog = false">取消</el-button>
+				<el-button type="primary" @click="verifyAccount">
+					下一步
+				</el-button>
+			</span>
+		</template>
+	</el-dialog>
+
+	<!-- 修改密码 -->
+	<el-dialog v-model="state.changePasswordDialog" title="修改密码" width="400px" align-center center>
+		<el-form :rules="rules" class="forget-form" :label-position="labelposition">
+			<el-form-item label="新密码" prop="password">
+				<el-input v-model="forgetFrom.password" placeholder="请输入您的新密码" />
+			</el-form-item>
+			<el-form-item label="确认新密码" prop="nextPassword">
+				<el-input v-model="forgetFrom.nextPassword" show-password placeholder="请确认您的新密码" />
+			</el-form-item>
+		</el-form>
+
+		<!-- 底部内容 -->
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button @click="state.changePasswordDialog = false">取消</el-button>
+				<el-button type="primary" @click="resetPassword">
+					确定
 				</el-button>
 			</span>
 		</template>
@@ -52,13 +75,24 @@
 			{ required: true, message: '请输入您的注册邮箱', trigger: 'blur' },
 		],
 		password: [
-			{ required: true, message: '请输入您想修改的密码', trigger: 'blur' },
+			{ required: true, message: '请输入您的新密码', trigger: 'blur' },
 		],
 		nextPassword: [
-			{ required: true, message: '请再次确认您的新密码', trigger: 'blur' },
+			{ required: true, message: '请确认您的新密码', trigger: 'blur' },
 		],
 
 	})
+
+	// 下一步 --> 修改密码弹窗
+	const verifyAccount = () => {
+		state.forgetPasswordDialog = false
+		state.changePasswordDialog = true
+	}
+
+	// 修改密码
+	const resetPassword = () => {
+		state.changePasswordDialog = false
+	}
 
 	// 控制弹窗 默认关闭
 	const state = reactive({
