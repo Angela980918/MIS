@@ -44,7 +44,7 @@
 										<el-input v-model="registerData.nextPassword" placeholder="请再次输入密码" />
 									</el-form-item>
 									<div class="register-btn">
-										<el-button type="primary">注册</el-button>
+										<el-button type="primary" @click='Register'>注册</el-button>
 									</div>
 								</el-form>
 							</el-tab-pane>
@@ -68,30 +68,47 @@
 
 <script lang="ts" setup>
 	import forgetPassword from './component/forgetPassword.vue'
-	import { ref, reactive } from 'vue'
+	import {
+		ref,
+		reactive
+	} from 'vue'
+	import {
+		register
+	} from '@/api/login'
 
 	const forgetV = ref()
 	const activeName = ref('first')
 
 	// 表单接口
 	interface FormData {
-		account : number | null, //账号
-		password : string, //密码
-		nextPassword ?: string; //确认密码
+		account: number | null, //账号
+			password: string, //密码
+			nextPassword ? : string; //确认密码
 	}
 
 	// 登录表单数据
-	const loginData : FormData = reactive({
+	const loginData: FormData = reactive({
 		account: null, //账号
 		password: '', //密码
 	})
 
-	// z表单数据
-	const registerData : FormData = reactive({
+	// 表单数据
+	const registerData: FormData = reactive({
 		account: null, //账号
 		password: '', //密码
 		nextPassword: '', //确认密码
 	})
+
+	// 注册
+	const Register = async () => {
+		if (registerData.password == registerData.nextPassword) {
+			console.log(registerData);
+			const res = await register(registerData)
+			console.log(res);
+		} else {
+			console.log("两次密码不一致");
+		}
+	}
 
 	// 忘记密码弹窗
 	const openForget = () => {
