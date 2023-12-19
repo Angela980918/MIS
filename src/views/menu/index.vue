@@ -107,7 +107,7 @@
 								<el-dropdown-menu>
 									<el-dropdown-item>设置账号</el-dropdown-item>
 									<el-dropdown-item>更改头像</el-dropdown-item>
-									<el-dropdown-item>退出登录</el-dropdown-item>
+									<el-dropdown-item @click="outLogin">退出登录</el-dropdown-item>
 								</el-dropdown-menu>
 							</template>
 						</el-dropdown>
@@ -122,6 +122,7 @@
 </template>
 
 <script lang="ts" setup>
+	import { useRouter } from 'vue-router';
 	import {
 		Menu as IconMenu,
 	} from '@element-plus/icons-vue'
@@ -134,11 +135,17 @@
 		circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
 		squareUrl: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
 		sizeList: ['small', '', 'large'] as
-		const,
+			const,
 	})
 	const {
 		circleUrl
 	} = toRefs(state)
+	const router = useRouter()
+
+	// 退出登录
+	const outLogin = () => {
+		router.push('/login')
+	}
 </script>
 
 <style lang="scss" scoped>
