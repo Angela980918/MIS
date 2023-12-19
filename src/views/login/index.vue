@@ -10,7 +10,7 @@
 			<el-main>
 				<div class="login-wrapped">
 					<el-card class="box-card">
-						<el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick" stretch>
+						<el-tabs v-model="activeName" class="demo-tabs" stretch>
 							<el-tab-pane label="登录" name="first">
 								<el-form class="login-form">
 									<el-form-item label="账号">
@@ -24,7 +24,7 @@
 											<span class="forget-password-btn" @click="openForget">忘记密码</span>
 										</div>
 										<div class="login-btn">
-											<el-button type="primary">登录</el-button>
+											<el-button type="primary" @click="Login">登录</el-button>
 										</div>
 										<div class="register-btn">
 											还没有账号？<span class="to-register">马上注册</span>
@@ -67,33 +67,37 @@
 </template>
 
 <script lang="ts" setup>
+	import { ElMessage } from 'element-plus'
 	import forgetPassword from './component/forgetPassword.vue'
 	import {
 		ref,
 		reactive
 	} from 'vue'
 	import {
-		register
+		register, login
 	} from '@/api/login'
+	import { CollectionTag } from '@element-plus/icons-vue/dist/types';
+	import { useRouter } from 'vue-router'
 
 	const forgetV = ref()
 	const activeName = ref('first')
+	const router = useRouter()
 
 	// 表单接口
 	interface FormData {
-		account: number | null, //账号
-			password: string, //密码
-			nextPassword ? : string; //确认密码
+		account : number | null, //账号
+		password : string, //密码
+		nextPassword ?: string; //确认密码
 	}
 
 	// 登录表单数据
-	const loginData: FormData = reactive({
+	const loginData : FormData = reactive({
 		account: null, //账号
 		password: '', //密码
 	})
 
 	// 表单数据
-	const registerData: FormData = reactive({
+	const registerData : FormData = reactive({
 		account: null, //账号
 		password: '', //密码
 		nextPassword: '', //确认密码
@@ -104,20 +108,50 @@
 		if (registerData.password == registerData.nextPassword) {
 			console.log(registerData);
 			const res = await register(registerData)
-			console.log(res);
+			if (res.msg == "注册成功") {
+				ElMessage({
+					message: res.msg,
+					type: 'success',
+				})
+				activeName.value = 'first'
+			} else {
+				ElMessage.error(res.msg)
+			}
 		} else {
-			console.log("两次密码不一致");
+			ElMessage.error('注册失败')
+		}
+	}
+
+	// 登录
+	const Login = async () => {
+		if (loginData.account && loginData.password) {
+			const res = await login(loginData)
+			// 解构
+			const { id, name, account, email, department } = res.result
+			const { token } = res
+			console.log(token);
+			if (res.msg == "登录成功") {
+				ElMessage({
+					message: res.msg,
+					type: 'success',
+				})
+				localStorage.setItem('id', id)
+				localStorage.setItem('token', token)
+				localStorage.setItem('name', name)
+				localStorage.setItem('department', department)
+				// 登录成功后跳转至home首页
+				router.push('/home')
+			} else {
+				ElMessage.error(res.msg)
+			}
+		} else {
+			ElMessage.error('登录失败')
 		}
 	}
 
 	// 忘记密码弹窗
 	const openForget = () => {
 		forgetV.value.open()
-	}
-
-	// 
-	const handleClick = () => {
-		console.log("111");
 	}
 </script>
 
