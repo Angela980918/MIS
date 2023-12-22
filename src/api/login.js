@@ -31,3 +31,31 @@ export const login = data => {
 		}
 	})
 }
+
+// 忘记密码验证
+export const verify = data => {
+	const {
+		account,
+		email
+	} = data
+	return instance({
+		url: '/user/verifyAccountAndEmail',
+		method: 'POST',
+		data: {
+			account,
+			email
+		}
+	})
+}
+
+// 重置密码 ()
+export const resetNewPassword = (id, newPassword) => {
+	return instance({
+		url: '/user/changePasswordInLogin',
+		method: 'POST',
+		data: {
+			id,
+			newPassword
+		}
+	})
+}
