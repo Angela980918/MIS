@@ -12,11 +12,11 @@
 					<el-card class="box-card">
 						<el-tabs v-model="activeName" class="demo-tabs" stretch>
 							<el-tab-pane label="登录" name="first">
-								<el-form class="login-form">
-									<el-form-item label="账号">
+								<el-form :rules="rules" class="login-form">
+									<el-form-item label="账号" prop='loginAccount'>
 										<el-input v-model="loginData.account" placeholder="请输入账号" />
 									</el-form-item>
-									<el-form-item label="密码">
+									<el-form-item label="密码" prop='loginPassword'>
 										<el-input v-model="loginData.password" show-password placeholder="请输入密码" />
 									</el-form-item>
 									<div class="login-footer">
@@ -33,14 +33,14 @@
 								</el-form>
 							</el-tab-pane>
 							<el-tab-pane label="注册" name="second">
-								<el-form class="register-form">
-									<el-form-item label="账号">
+								<el-form :rules="rules" class="register-form">
+									<el-form-item label="账号" prop='registerAccount'>
 										<el-input v-model="registerData.account" placeholder="账号长度6-12位" />
 									</el-form-item>
-									<el-form-item label="密码">
+									<el-form-item label="密码" prop='registerPassword'>
 										<el-input v-model="registerData.password" placeholder="密码需长度6-12位含字母数字" />
 									</el-form-item>
-									<el-form-item label="确认">
+									<el-form-item label="确认" prop='registerNextPassword'>
 										<el-input v-model="registerData.nextPassword" placeholder="请再次输入密码" />
 									</el-form-item>
 									<div class="register-btn">
@@ -78,10 +78,30 @@
 	} from '@/api/login'
 	import { CollectionTag } from '@element-plus/icons-vue/dist/types';
 	import { useRouter } from 'vue-router'
+	import { getTip } from '@/tips'
 
 	const forgetV = ref()
 	const activeName = ref('first')
 	const router = useRouter()
+
+	// 表单规则
+	const rules = reactive({
+		loginAccount: [
+			{ required: true, message: '请输入您的账号', trigger: 'blur' },
+		],
+		loginPassword: [
+			{ required: true, message: '请输入您的密码', trigger: 'blur' },
+		],
+		registerAccount: [
+			{ required: true, message: '请输入您的账号', trigger: 'blur' },
+		],
+		registerPassword: [
+			{ required: true, message: '请输入您的密码', trigger: 'blur' },
+		],
+		registerNextPassword: [
+			{ required: true, message: '请确认您的密码', trigger: 'blur' },
+		],
+	})
 
 	// 表单接口
 	interface FormData {
@@ -126,11 +146,12 @@
 	const Login = async () => {
 		if (loginData.account && loginData.password) {
 			const res = await login(loginData)
-			// 解构
-			const { id, name, account, email, department } = res.result
-			const { token } = res
-			console.log(token);
+			console.log(res);
 			if (res.msg == "登录成功") {
+				// 解构
+				const { id, name, account, email, department } = res.result
+				const { token } = res
+				console.log(token);
 				ElMessage({
 					message: res.msg,
 					type: 'success',
@@ -145,7 +166,7 @@
 				ElMessage.error(res.msg)
 			}
 		} else {
-			ElMessage.error('登录失败')
+			ElMessage.error(getTip('FullLoginFrom'))
 		}
 	}
 
