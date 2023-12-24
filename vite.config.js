@@ -7,6 +7,9 @@ import Components from 'unplugin-vue-components/vite'
 import {
 	ElementPlusResolver
 } from 'unplugin-vue-components/resolvers'
+import {
+	createSvgIconsPlugin
+} from 'vite-plugin-svg-icons'
 
 // 设置@指向./src路径
 import {
@@ -23,6 +26,10 @@ export default defineConfig({
 		}),
 		Components({
 			resolvers: [ElementPlusResolver()],
+		}),
+		createSvgIconsPlugin({
+			iconDirs: [resolve(process.cwd(), 'src/assets/svg')],
+			symbolId: 'icon-[dir]-[name]',
 		}),
 	],
 	pluginOptions: {
