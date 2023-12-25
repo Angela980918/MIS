@@ -13,6 +13,8 @@
     "element-plus": "^2.4.3",
     "fast-glob": "^3.3.2",
     "mitt": "^3.0.1",
+    "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "sass": "^1.69.5",
     "sass-loader": "^13.3.2",
     "style-loader": "^3.3.3",
