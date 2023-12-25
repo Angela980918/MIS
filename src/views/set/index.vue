@@ -139,7 +139,7 @@
 	const handleAvatarSuccess : UploadProps['onSuccess'] = (
 		response
 	) => {
-		console.log(response, uploadFile);
+		console.log(response);
 		if (response.status === 0) {
 			userInfoStore.$patch({
 				imageUrl: response.url
