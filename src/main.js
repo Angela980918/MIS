@@ -13,6 +13,8 @@ import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 // 导入svg图标
 import 'virtual:svg-icons-register'
+// 导入Pinia
+import pinia from '@/store'
 
 
 
@@ -26,4 +28,5 @@ app.use(ElementPlus, {
 })
 
 app.use(router)
+app.use(pinia)
 app.mount('#app')
