@@ -79,10 +79,12 @@
 	import { CollectionTag } from '@element-plus/icons-vue/dist/types';
 	import { useRouter } from 'vue-router'
 	import { getTip } from '@/tips'
+	import { useUserInfoStore } from '@/store/userInfo'
 
 	const forgetV = ref()
 	const activeName = ref('first')
 	const router = useRouter()
+	const store = useUserInfoStore()
 
 	// 表单规则
 	const rules = reactive({
@@ -160,6 +162,7 @@
 				localStorage.setItem('token', token)
 				localStorage.setItem('name', name)
 				localStorage.setItem('department', department)
+				store.fetchUserInfo(id)
 				// 登录成功后跳转至home首页
 				router.push('/home')
 			} else {
