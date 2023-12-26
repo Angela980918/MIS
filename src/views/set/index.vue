@@ -8,7 +8,7 @@
 					<div class="account-info-wrapped">
 						<span>用户头像：</span>
 						<div class="account-info-content">
-							<el-upload class="avatar-uploader" action="http://127.0.0.1:3007/user/uploadAvatar"
+							<el-upload class="avatar-uploader" action="http://127.0.0.1:3007/user/uploadAvatar" :data="uploadData"
 								:show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
 								<img v-if="userInfoStore.imageUrl" :src="userInfoStore.imageUrl" class="avatar" />
 								<el-icon v-else class="avatar-uploader-icon">
@@ -35,7 +35,7 @@
 					<div class="account-info-wrapped">
 						<span>用户密码：</span>
 						<div class="account-info-content">
-							<el-button type="primary">修改密码</el-button>
+							<el-button type="primary" @click="openChangePassword">修改密码</el-button>
 						</div>
 					</div>
 
@@ -88,6 +88,7 @@
 			</el-tabs>
 		</div>
 	</div>
+	<changePassword ref='changeV' />
 </template>
 
 <script lang="ts" setup>
@@ -118,7 +119,11 @@
 		changeSex,
 		changeEmail
 	} from '@/api/userInfo.js'
+	import { storeToRefs } from 'pinia';
+	import changePassword from './component/changePassword.vue'
 
+	// 当前页面刷新状态
+	const loading = ref(false)
 
 	// userInfoStore
 	const userInfoStore = useUserInfoStore()
@@ -134,7 +139,11 @@
 		first: '系统设置',
 	})
 
-	const imageUrl = ref('')
+	// 上传文件携带的参数
+	const uploadData = ref({
+		id: localStorage.getItem('id'),
+		account: userInfoStore.account
+	})
 	// 头像上传成功的函数 response回应
 	const handleAvatarSuccess : UploadProps['onSuccess'] = (
 		response
@@ -190,6 +199,38 @@
 		email: '',
 		user_id: ''
 	})
+
+	onMounted(async () => {
+		loading.value = true
+		const id = localStorage.getItem('id')
+		try {
+			// 刷新页面后重新拉取数据
+			await userInfoStore.fetchUserInfo(id)
+			const {
+				account, name, sex, department, identity, user_id, email
+			} = storeToRefs(userInfoStore)
+
+			userForm.account = account
+			userForm.name = name
+			userForm.sex = sex
+			userForm.department = department
+			userForm.identity = identity
+			userForm.user_id = user_id
+			userForm.email = email
+		}
+		catch (error) {
+			console.error('请求失败', error)
+		} finally {
+			loading.value = false
+		}
+	})
+
+	const changeV = ref()
+
+	// 修改密码弹窗
+	const openChangePassword = () => {
+		changeV.value.open()
+	}
 </script>
 
 <style lang="scss" scoped>
