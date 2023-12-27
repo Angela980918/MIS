@@ -26,8 +26,11 @@
 	import {
 		changePassword
 	} from '@/api/userInfo'
+	import { useRouter } from 'vue-router';
 	import { ElMessage } from 'element-plus'
 	import { getTip } from '@/tips'
+
+	const router = useRouter()
 
 	// 表单对齐方式
 	const labelposition = ref('top')
@@ -69,9 +72,13 @@
 					type: 'success',
 				})
 				state.changePasswordDialog = false
+				// 修改成功后重新登录
+				router.push('/login')
+			} else if (res.status === 1) {
+				ElMessage.error(res.msg)
 			}
 			else {
-				ElMessage.error(res.msg)
+				ElMessage.error(getTip('other'))
 			}
 		}
 	}
