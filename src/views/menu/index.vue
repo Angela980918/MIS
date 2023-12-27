@@ -89,14 +89,17 @@
 			</el-aside>
 			<el-container>
 				<el-header>
-					<span class="header-left-content">尊敬的xxx 欢迎您登录本系统</span>
+					<span class="header-left-content">
+						尊敬的
+						<span class="user-name">{{ userInfoStore.name}}</span>
+						欢迎您登录本系统</span>
 					<div class="header-right-content">
 						<el-badge>
 							<el-icon :size="20" class="message">
 								<Message />
 							</el-icon>
 						</el-badge>
-						<el-avatar :size="24" :src="userStore.imageUrl" />
+						<el-avatar :size="24" :src="userInfoStore.imageUrl" />
 						<el-dropdown>
 							<span class="el-dropdown-link">
 								<el-icon>
@@ -137,17 +140,8 @@
 		useUserInfoStore
 	} from '@/store/userInfo.js'
 
-	const userStore = useUserInfoStore()
+	const userInfoStore = useUserInfoStore()
 
-	const state = reactive({
-		circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
-		squareUrl: 'https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png',
-		sizeList: ['small', '', 'large'] as
-			const,
-	})
-	const {
-		circleUrl
-	} = toRefs(state)
 	const router = useRouter()
 
 	// 退出登录
@@ -202,6 +196,12 @@
 		// 欢迎语
 		.header-left-content {
 			font-size: 14px;
+			
+			.user-name{
+				font-size: 16px;
+				color: firebrick;
+				text-align: center;
+			}
 		}
 
 		.header-right-content {
