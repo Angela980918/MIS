@@ -62,7 +62,7 @@ export const changeSex = (id, sex) => {
 }
 
 // 修改邮箱 id email
-export const changeEmail = (email, id) => {
+export const changeEmail = (id, email) => {
 	return instance({
 		url: '/user/changeEmail',
 		method: 'POST',
