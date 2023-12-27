@@ -44,7 +44,7 @@
 						<div class="account-info-content">
 							<el-input v-model="userForm.name"></el-input>
 						</div>
-						<el-button type="primary">保存</el-button>
+						<el-button type="primary" @click="save('name')">保存</el-button>
 					</div>
 
 					<div class="account-info-wrapped">
@@ -55,7 +55,7 @@
 								<el-option label="女" value="女" />
 							</el-select>
 						</div>
-						<el-button type="primary">保存</el-button>
+						<el-button type="primary" @click="save('sex')">保存</el-button>
 					</div>
 
 					<div class="account-info-wrapped">
@@ -78,7 +78,7 @@
 							<el-input v-model="userForm.email"></el-input>
 						</div>
 						<div class="account-save-button">
-							<el-button type="primary">保存</el-button>
+							<el-button type="primary" @click="save('email')">保存</el-button>
 						</div>
 					</div>
 				</el-tab-pane>
@@ -121,6 +121,7 @@
 	} from '@/api/userInfo.js'
 	import { storeToRefs } from 'pinia';
 	import changePassword from './component/changePassword.vue'
+	import { getTip } from '@/tips'
 
 	// 当前页面刷新状态
 	const loading = ref(false)
@@ -230,6 +231,32 @@
 	// 修改密码弹窗
 	const openChangePassword = () => {
 		changeV.value.open()
+	}
+
+	// 保存 --> sex,name,email
+	const save = async (field : string) => {
+		await saveField(field);
+	}
+
+	const saveField = async (field : string) => {
+		const updateFunctions = {
+			sex: changeSex,
+			name: changeName,
+			email: changeEmail,
+		}
+		const updateFunction = updateFunctions[field];
+		const res = await updateFunction(localStorage.getItem('id'), userForm[field]);
+
+		if (res.status == 0) {
+			ElMessage({
+				message: res.msg,
+				type: 'success',
+			})
+		} else if (res.status == 1) {
+			ElMessage.error(res.msg)
+		} else {
+			ElMessage.error(getTip('other'))
+		}
 	}
 </script>
 
