@@ -1,3 +1,7 @@
+/**
+ * 用户信息相关接口
+ */
+
 import instance from "@/http/index.js"
 
 // 获取用户信息 ID
