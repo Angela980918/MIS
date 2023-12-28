@@ -1,3 +1,7 @@
+/**
+ * 注册登录相关接口
+ */
+
 import instance from "@/http/index.js"
 
 // 注册
