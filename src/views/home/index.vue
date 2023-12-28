@@ -17,29 +17,53 @@
 			<el-row :gutter="20">
 				<el-col :span="6">
 					<div class="company-message-area">
-						<span>1</span>
+						<span class="area-name">1</span>
+						<div class="company-introduce">111</div>
 					</div>
 				</el-col>
 				<el-col :span="6">
 					<div class="company-message-area">
-						<span>2</span>
+						<span class="area-name">2</span>
+						<div class="company-introduce">222</div>
 					</div>
 				</el-col>
 				<el-col :span="6">
 					<div class="company-message-area">
-						<span>3</span>
+						<span class="area-name">3</span>
+						<div class="company-introduce">333</div>
 					</div>
 				</el-col>
 				<el-col :span="6">
 					<div class="company-message-area">
-						<span>4</span>
+						<span class="area-name">4</span>
+						<div class="company-introduce">444</div>
 					</div>
 				</el-col>
 			</el-row>
 		</div>
 
 		<!-- 表格外壳 -->
-		<div class="two-table-wrapped"></div>
+		<div class="two-table-wrapped">
+			<!-- 公司公告 -->
+			<div class="company-notice">
+				<span class="title">公司公告</span>
+				<el-table :data="tableData" style="width: 100%" :show-header='false'>
+					<el-table-column prop="date" label="Date" width="180" />
+					<el-table-column prop="name" label="Name" width="180" />
+					<el-table-column prop="address" label="Address" />
+				</el-table>
+			</div>
+
+			<!-- 系统消息 -->
+			<div class="system-message">
+				<span class="title">系统消息</span>
+				<el-table :data="tableData" style="width: 100%" :show-header='false'>
+					<el-table-column prop="date" label="Date" width="180" />
+					<el-table-column prop="name" label="Name" width="180" />
+					<el-table-column prop="address" label="Address" />
+				</el-table>
+			</div>
+		</div>
 
 	</div>
 </template>
@@ -54,6 +78,29 @@
 	const item = ref({
 		first: '首页',
 	})
+
+	const tableData = [
+		{
+			date: '2016-05-03',
+			name: 'Tom',
+			address: 'No. 189, Grove St, Los Angeles',
+		},
+		{
+			date: '2016-05-02',
+			name: 'Tom',
+			address: 'No. 189, Grove St, Los Angeles',
+		},
+		{
+			date: '2016-05-04',
+			name: 'Tom',
+			address: 'No. 189, Grove St, Los Angeles',
+		},
+		{
+			date: '2016-05-01',
+			name: 'Tom',
+			address: 'No. 189, Grove St, Los Angeles',
+		},
+	]
 </script>
 
 <style lang="scss" scoped>
@@ -94,15 +141,70 @@
 				height: 200px;
 				padding: 8px;
 				cursor: pointer;
+
+				// 标题
+				.area-name {
+					border-bottom: 1px solid #409eff;
+					font-size: 14px;
+				}
+
+				// 内容
+				.company-introduce {
+					text-indent: 24px;
+					font-size: 14px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					-webkit-line-clamp: 3;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+				}
+
 			}
+
+			// 鼠标悬停状态
+			.company-message-area:hover {
+				cursor: pointer;
+				background-color: #eef5ff;
+			}
+
 
 		}
 
 		// 表格外壳
-		.two-table-wrapped {}
+		.two-table-wrapped {
+			height: 232px;
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: space-around;
+			background: #fff;
+
+			// 公司公告
+			.company-notice {
+				@include table-class
+			}
+
+			// 系统消息
+			.system-message {
+				@include table-class
+			}
+
+			.title {
+				font-size: 14px;
+				margin-bottom: 5px;
+				border-bottom: 1px solid #ea0709;
+			}
+		}
 	}
 
 
+	.message_title {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	// 轮播图默认样式
 	.el-carousel__item h3 {
 		color: #475669;
 		opacity: 0.75;
@@ -117,22 +219,5 @@
 
 	.el-carousel__item:nth-child(2n + 1) {
 		background-color: #d3dce6;
-	}
-
-	.el-row {
-		margin-bottom: 20px;
-	}
-
-	.el-row:last-child {
-		margin-bottom: 0;
-	}
-
-	.el-col {
-		border-radius: 4px;
-	}
-
-	.grid-content {
-		border-radius: 4px;
-		min-height: 36px;
 	}
 </style>
