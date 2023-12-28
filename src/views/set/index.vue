@@ -82,7 +82,17 @@
 						</div>
 					</div>
 				</el-tab-pane>
-				<el-tab-pane label="Config" name="second">Config</el-tab-pane>
+				<el-tab-pane label="公司信息" name="second">
+					<div class="account-info-wrapped">
+						<span>公司名称：</span>
+						<div class="account-info-content">
+							<el-input v-model="userForm.name"></el-input>
+						</div>
+						<el-button type="primary" @click="save('name')">编辑公司名称</el-button>
+					</div>
+					
+					
+				</el-tab-pane>
 				<el-tab-pane label="Role" name="third">Role</el-tab-pane>
 				<el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
 			</el-tabs>
@@ -119,6 +129,11 @@
 		changeSex,
 		changeEmail
 	} from '@/api/userInfo.js'
+	import {
+		getAllSwiper,
+		getAllCompanyIntroduce,
+		uploadCompanyIntroduce
+	} from '@/api/setting.js'
 	import { storeToRefs } from 'pinia';
 	import changePassword from './component/changePassword.vue'
 	import { getTip } from '@/tips'
@@ -246,6 +261,7 @@
 		}
 		const updateFunction = updateFunctions[field];
 		const res = await updateFunction(localStorage.getItem('id'), userForm[field]);
+		console.log(this);
 
 		if (res.status == 0) {
 			ElMessage({
