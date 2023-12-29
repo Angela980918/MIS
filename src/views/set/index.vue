@@ -83,22 +83,55 @@
 					</div>
 				</el-tab-pane>
 				<el-tab-pane label="公司信息" name="second">
+
 					<div class="account-info-wrapped">
-						<span>公司名称：</span>
+						<span>公司名称</span>
 						<div class="account-info-content">
-							<el-input v-model="userForm.name"></el-input>
+							<el-input v-model="companyName"></el-input>
 						</div>
-						<el-button type="primary" @click="save('name')">编辑公司名称</el-button>
+						<div class="account-save-button">
+							<el-button type="primary" @click='changeCompanyName'>编辑公司名称</el-button>
+						</div>
 					</div>
-					
-					
+
+					<div class="account-info-wrapped">
+						<span>公司介绍</span>
+						<div class="account-info-content">
+							<el-button type="success" @click="openEditor(1)">编辑公司介绍</el-button>
+						</div>
+					</div>
+
+					<div class="account-info-wrapped">
+						<span>公司架构</span>
+						<div class="account-info-content">
+							<el-button type="success" @click="openEditor(2)">编辑公司架构</el-button>
+						</div>
+					</div>
+
+					<div class="account-info-wrapped">
+						<span>公司战略</span>
+						<div class="account-info-content">
+							<el-button type="success" @click="openEditor(3)">编辑公司战略</el-button>
+						</div>
+					</div>
+
+					<div class="account-info-wrapped">
+						<span>公司高层</span>
+						<div class="account-info-content">
+							<el-button type="success" @click="openEditor(4)">编辑公司高层</el-button>
+						</div>
+					</div>
 				</el-tab-pane>
 				<el-tab-pane label="Role" name="third">Role</el-tab-pane>
 				<el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
 			</el-tabs>
 		</div>
 	</div>
+	<!-- 修改密码弹窗 -->
 	<changePassword ref='changeV' />
+
+	<!-- 富文本编辑器弹窗 -->
+	<editor ref="editorP"></editor>
 </template>
 
 <script lang="ts" setup>
@@ -124,7 +157,6 @@
 	} from '@/store/userInfo.js'
 	import {
 		bindAccount,
-		getUserInfo,
 		changeName,
 		changeSex,
 		changeEmail
@@ -132,14 +164,45 @@
 	import {
 		getAllSwiper,
 		getAllCompanyIntroduce,
-		uploadCompanyIntroduce
+		uploadCompanyIntroduce,
+		getCompanyName,
+		updateCompanyName
 	} from '@/api/setting.js'
 	import { storeToRefs } from 'pinia';
+	import { bus } from "@/utils/mitt.js"
 	import changePassword from './component/changePassword.vue'
+	import editor from './component/editor.vue'
 	import { getTip } from '@/tips'
+	import { async } from 'fast-glob'
 
 	// 当前页面刷新状态
 	const loading = ref(false)
+
+	// 公司名称
+	const companyName = ref()
+
+	const patchCompanyName = async () => {
+		const res = await getCompanyName()
+		companyName.value = res.result[0].set_value
+	}
+
+	// 获取公司名称
+	patchCompanyName()
+
+	// 修改公司名称
+	const changeCompanyName = async () => {
+		const res = await updateCompanyName(companyName.value)
+		if (res.status === 0) {
+			ElMessage({
+				message: res.msg,
+				type: 'success',
+			})
+		} else if (res.status === 1) {
+			ElMessage.error(res.msg)
+		} else {
+			ElMessage.error(getTip('other'))
+		}
+	}
 
 	// userInfoStore
 	const userInfoStore = useUserInfoStore()
@@ -273,6 +336,14 @@
 		} else {
 			ElMessage.error(getTip('other'))
 		}
+	}
+
+	const editorP = ref()
+	// 打开富文本
+	const openEditor = (id : number) => {
+		// 第一个参数是 标记,第二个参数要传入的值
+		bus.emit('editorTitle', id)
+		editorP.value.open()
 	}
 </script>
 
