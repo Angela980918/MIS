@@ -12,7 +12,7 @@ export const getAllSwiper = () => {
 	})
 }
 
-// 获取公司相关信息
+// 获取公司全部相关信息
 export const getAllCompanyIntroduce = () => {
 	return instance({
 		url: '/setting/getAllCompanyIntroduce',
@@ -20,8 +20,19 @@ export const getAllCompanyIntroduce = () => {
 	})
 }
 
+// 获取公司相关信息 set_name
+export const getCompanyIntroduce = (set_name) => {
+	return instance({
+		url: '/setting/getCompanyIntroduce',
+		method: 'POST',
+		data: {
+			set_name
+		}
+	})
+}
+
 /**
- * 获取公司相关信息
+ * 修改公司相关信息
  * set_name * 标题字段
  * set_text * 内容字段
  */
@@ -32,6 +43,31 @@ export const uploadCompanyIntroduce = (set_name, set_text) => {
 		data: {
 			set_name,
 			set_text
+		}
+	})
+}
+
+/**
+ * 获取公司名称
+ */
+export const getCompanyName = () => {
+	return instance({
+		url: '/setting/getCompanyName',
+		method: 'POST',
+	})
+}
+
+/**
+ * 修改公司名称
+ * set_name * 标题字段
+ * set_value * 内容字段
+ */
+export const updateCompanyName = (set_value) => {
+	return instance({
+		url: '/setting/updateCompanyName',
+		method: 'POST',
+		data: {
+			set_value
 		}
 	})
 }
