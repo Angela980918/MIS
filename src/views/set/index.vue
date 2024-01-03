@@ -122,7 +122,29 @@
 						</div>
 					</div>
 				</el-tab-pane>
-				<el-tab-pane label="Role" name="third">Role</el-tab-pane>
+				<el-tab-pane label="首页管理" name="third">
+					<div class="home-wrapped">
+						<!-- 提示 -->
+						<div class="tips">
+							<span>
+								提示: 点击图片框进行切换首页轮播图
+							</span>
+						</div>
+
+						<!-- 轮播图 -->
+						<div class="swiper-wrapped" v-for="(item,index) in swiperData" :key="index">
+							<div class="swiper-name">轮播图{{item.id}}:&nbsp;&nbsp;</div>
+							<el-upload class="avatar-uploader" action="http://127.0.0.1:3007/setting/uploadSwiper"
+								:show-file-list="false" :on-success="handleSwiperSuccess" :before-upload="beforeAvatarUpload"
+								:data='item'>
+								<template #trigger>
+									<img v-if="item.imgUrl" :src="item.imgUrl" class="swiper" />
+									<img src="@/assets/雪碧图.png" alt="" v-else>
+								</template>
+							</el-upload>
+						</div>
+					</div>
+				</el-tab-pane>
 				<el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
 			</el-tabs>
 		</div>
@@ -296,6 +318,10 @@
 			userForm.identity = identity
 			userForm.user_id = user_id
 			userForm.email = email
+
+			// 获取轮播图数据
+			updateSwiperData()
+
 		}
 		catch (error) {
 			console.error('请求失败', error)
@@ -345,6 +371,42 @@
 		bus.emit('editorTitle', id)
 		editorP.value.open()
 	}
+	// 首页管理
+	const swiperData = ref([])
+
+	// 获取轮播图数据
+	const updateSwiperData = async () => {
+		const swiperRes = await getAllSwiper()
+		if (swiperRes.status === 0 && Array.isArray(swiperRes.result)) {
+			swiperData.value = swiperRes.result.map((item) => ({
+				id: item.id,
+				name: item.set_name,
+				imgUrl: item.set_value,
+			}))
+		} else {
+			console.error('获取轮播图数据失败：', swiperRes.msg);
+		}
+	}
+
+	// 上传轮播图成功
+	const handleSwiperSuccess : UploadProps['onSuccess'] = (
+		response
+	) => {
+		console.log(response);
+		if (response.status === 0) {
+			console.log(response);
+			ElMessage({
+				message: response.msg,
+				type: 'success',
+			});
+			// 更新轮播图数据
+			updateSwiperData()
+		} else if (response.status === 1) {
+			ElMessage.error(response.msg)
+		} else {
+			ElMessage.error(getTip('other'))
+		}
+	}
 </script>
 
 <style lang="scss" scoped>
@@ -379,7 +441,42 @@
 				.account-save-button {
 					margin-left: 16px;
 				}
+			}
 
+			// 首页管理外壳
+			.home-wrapped {
+				padding-left: 50px;
+				display: flex;
+				flex-direction: column;
+
+				// 提示
+				.tips {
+					display: flex;
+					align-items: center;
+					margin-bottom: 8px;
+
+					span {
+						font-size: 14px;
+						color: silver;
+					}
+				}
+
+				// 轮播图
+				.swiper-wrapped {
+					display: flex;
+					margin-bottom: 16px;
+
+					// 轮播图名字
+					.swiper-name {
+						font-size: 14px;
+						margin-bottom: 24px;
+					}
+
+					.swiper {
+						width: 336px;
+						height: 96px;
+					}
+				}
 			}
 		}
 	}
