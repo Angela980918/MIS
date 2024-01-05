@@ -6,8 +6,8 @@
 		<!-- 轮播图外壳 -->
 		<div class="swiper-wrapped">
 			<el-carousel :interval="4000" type="card" height="200px" indicator-position='outside'>
-				<el-carousel-item v-for="item in 6" :key="item">
-					<h3 text="2xl" justify="center">{{ item }}</h3>
+				<el-carousel-item v-for="(item,index) in swiperData" :key="index">
+					<img :src="item.imgUrl" alt="" />
 				</el-carousel-item>
 			</el-carousel>
 		</div>
@@ -15,28 +15,10 @@
 		<!-- 栅格布局外壳 -->
 		<div class="layout-wrapped">
 			<el-row :gutter="20">
-				<el-col :span="6">
+				<el-col :span="6" v-for="(item,index) in companyIntroduceData" :key="index">
 					<div class="company-message-area">
-						<span class="area-name">1</span>
-						<div class="company-introduce">111</div>
-					</div>
-				</el-col>
-				<el-col :span="6">
-					<div class="company-message-area">
-						<span class="area-name">2</span>
-						<div class="company-introduce">222</div>
-					</div>
-				</el-col>
-				<el-col :span="6">
-					<div class="company-message-area">
-						<span class="area-name">3</span>
-						<div class="company-introduce">333</div>
-					</div>
-				</el-col>
-				<el-col :span="6">
-					<div class="company-message-area">
-						<span class="area-name">4</span>
-						<div class="company-introduce">444</div>
+						<span class="area-name">{{item.set_name}}</span>
+						<div v-html="item.set_text" class="company-introduce"></div>
 					</div>
 				</el-col>
 			</el-row>
@@ -69,8 +51,10 @@
 </template>
 
 <script lang="ts" setup>
-	import { ref } from 'vue';
 	import BreadCrumb from '@/components/BreadCrumb.vue'
+	import { ref, onMounted } from 'vue';
+	import { getAllSwiper, getAllCompanyIntroduce } from '@/api/setting'
+
 	// 面包屑
 	const breadcrumb = ref()
 
@@ -78,6 +62,31 @@
 	const item = ref({
 		first: '首页',
 	})
+
+	// 轮播图
+	const swiperData = ref([])
+
+	// 获取轮播图数据
+	const updateSwiperData = async () => {
+		const swiperRes = await getAllSwiper()
+		if (swiperRes.status === 0 && Array.isArray(swiperRes.result)) {
+			swiperData.value = swiperRes.result.map((item) => ({
+				id: item.id,
+				name: item.set_name,
+				imgUrl: item.set_value,
+			}))
+		} else {
+			console.error('获取轮播图数据失败：', swiperRes.msg);
+		}
+	}
+
+	// 公司信息
+	const companyIntroduceData = ref([])
+
+	const getAllCompanyIntroduceData = async () => {
+		const res = await getAllCompanyIntroduce()
+		companyIntroduceData.value = res.result
+	}
 
 	const tableData = [
 		{
@@ -101,6 +110,13 @@
 			address: 'No. 189, Grove St, Los Angeles',
 		},
 	]
+
+	onMounted(async () => {
+		// 获取所有轮播图
+		await updateSwiperData()
+		// 获取公司所有信息
+		await getAllCompanyIntroduceData()
+	})
 </script>
 
 <style lang="scss" scoped>
