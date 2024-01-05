@@ -145,7 +145,14 @@
 						</div>
 					</div>
 				</el-tab-pane>
-				<el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+				<el-tab-pane label="部门设置" name="fourth">
+					<div class="other-set">
+						<div class="department-set">
+							<span>部门设置</span>
+
+						</div>
+					</div>
+				</el-tab-pane>
 			</el-tabs>
 		</div>
 	</div>
