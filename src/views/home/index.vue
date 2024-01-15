@@ -7,7 +7,7 @@
 		<div class="swiper-wrapped">
 			<el-carousel :interval="4000" type="card" height="200px" indicator-position='outside'>
 				<el-carousel-item v-for="(item,index) in swiperData" :key="index">
-					<img :src="item.imgUrl" alt="" />
+					<img class="swiper" :src="item.imgUrl" alt="" />
 				</el-carousel-item>
 			</el-carousel>
 		</div>
@@ -16,7 +16,7 @@
 		<div class="layout-wrapped">
 			<el-row :gutter="20">
 				<el-col :span="6" v-for="(item,index) in companyIntroduceData" :key="index">
-					<div class="company-message-area">
+					<div class="company-message-area" @click="openIntroduce(item.set_name)">
 						<span class="area-name">{{item.set_name}}</span>
 						<div v-html="item.set_text" class="company-introduce"></div>
 					</div>
@@ -48,12 +48,17 @@
 		</div>
 
 	</div>
+
+	<!-- 富文本编辑器弹窗 -->
+	<introduce ref="introduceP" />
 </template>
 
 <script lang="ts" setup>
 	import BreadCrumb from '@/components/BreadCrumb.vue'
 	import { ref, onMounted } from 'vue';
 	import { getAllSwiper, getAllCompanyIntroduce } from '@/api/setting'
+	import { bus } from "@/utils/mitt.js"
+	import introduce from './component/introduce.vue'
 
 	// 面包屑
 	const breadcrumb = ref()
@@ -117,6 +122,12 @@
 		// 获取公司所有信息
 		await getAllCompanyIntroduceData()
 	})
+
+	const introduceP = ref()
+	const openIntroduce = (set_name : string) => {
+		bus.emit("introduce", set_name)
+		introduceP.value.open()
+	}
 </script>
 
 <style lang="scss" scoped>
@@ -142,6 +153,10 @@
 			padding: 0 20px;
 			background: #fff;
 			margin-bottom: 8px;
+
+			.swiper {
+				width: 100%;
+			}
 		}
 
 		// 栅格布局外壳
