@@ -23,6 +23,11 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 	app.component(key, component)
 }
 
+// 设置全局异常处理
+app.config.errorHandler = ((err, vm, info) => {
+	console.log(err, vm, info);
+})
+
 app.use(ElementPlus, {
 	locale: zhCn,
 })
