@@ -4,6 +4,9 @@ import {
 import {
 	getUserInfo
 } from '@/api/userInfo.js'
+import {
+	getCompanyName
+} from '@/api/setting.js'
 
 
 export const useUserInfoStore = defineStore('userInfo', {
@@ -16,6 +19,7 @@ export const useUserInfoStore = defineStore('userInfo', {
 		account: '', // 账号
 		email: '', // 邮箱
 		user_id: '', // ID
+		company: '', //公司名称
 	}),
 	actions: {
 		// 获取用户相关信息 ID
@@ -29,6 +33,12 @@ export const useUserInfoStore = defineStore('userInfo', {
 			this.account = res.result.account
 			this.email = res.result.email
 			this.user_id = res.result.user_id
+		},
+		
+		// 获取公司名称
+		async fetchCompanyName() {
+			const res = await getCompanyName()
+			this.company = res.result[0].set_text
 		}
 	},
 	persist: {
