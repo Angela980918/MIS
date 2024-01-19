@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogFormVisible" :title='title' width="600px" align-center draggable>
+  <el-dialog v-model="dialogFormVisible" :title='title' width="600px" align-center draggable >
     <div class="dialog-content">
       <el-form ref="ruleFormRef" :model="formData" :rules="rules" label-width="100px">
         <el-form-item label="账号" prop="account">
@@ -27,6 +27,12 @@
         </el-form-item>
       </el-form>
     </div>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="">确定</el-button>
+      </span>
+    </template>
   </el-dialog>
 </template>
 
@@ -99,13 +105,14 @@ const departmentData = [
 ]
 
 bus.on('createId', (id: number) => {
+  console.log('createId', id);
   if (id == 1) {
     title.value = '新建产品管理员'
   }
-  if (id == 1) {
+  if (id == 2) {
     title.value = '新建用户管理员'
   }
-  if (id == 1) {
+  if (id == 3) {
     title.value = '新建消息管理员'
   }
 })
@@ -118,7 +125,7 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 .dialog-content {
   display: flex;
-  padding: 20px 30px;
+  padding: 0 30px;
 }
 
 :deep(.el-form-item) {
