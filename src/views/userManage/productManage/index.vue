@@ -12,7 +12,7 @@
 				</div>
 				<!-- 搜索按钮 -->
 				<div class="button-wrapped">
-					<el-button type="primary" @click="openCreateAdmin">添加产品管理员</el-button>
+					<el-button type="primary" @click="openCreateAdmin(1)">添加产品管理员</el-button>
 				</div>
 			</div>
 
@@ -47,6 +47,9 @@
 
 <script lang="ts" setup>
 import BreadCrumb from '@/components/BreadCrumb.vue'
+import {
+	bus
+} from "@/utils/mitt.js"
 import { ref } from 'vue';
 import { Search } from '@element-plus/icons-vue'
 import createAdmin from '../component/createAdmin.vue';
@@ -97,7 +100,7 @@ const tableData = [
 const CreateP = ref()
 
 const openCreateAdmin = (id: number) => {
-	// bus.emit('createId', id)
+	bus.emit('createId', id)
 	CreateP.value.open()
 }
 </script>
