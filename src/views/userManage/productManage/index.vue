@@ -22,6 +22,7 @@
 				<el-table :data="tableData" style="width: 100%" border highlight-current-row fit>
 					<el-table-column type="index" width="50" />
 					<el-table-column prop="account" label="账号" />
+					<el-table-column prop="user_id" label="员工ID" />
 					<el-table-column prop="name" label="姓名" />
 					<el-table-column prop="sex" label="性别" />
 					<el-table-column prop="department" label="部门" />
@@ -29,7 +30,8 @@
 					<el-table-column prop="update_time" label="更新时间"></el-table-column>
 					<el-table-column label="操作" width="200">
 						<template #default="{ row }">
-							<el-button size="small" type="success" @click="">编辑</el-button>
+							<el-button size="small" type="success"
+								@click="openEditAdmin(row.user_id?row.user_id:row.account)">编辑</el-button>
 							<el-button size="small" type="danger" @click="">删除</el-button>
 						</template>
 					</el-table-column>
@@ -43,64 +45,80 @@
 
 	<!-- 添加产品管理员 -->
 	<createAdmin ref="CreateP" />
+	<!-- 编辑产品管理员 -->
+	<editAdmin ref="EditP" />
 </template>
 
 <script lang="ts" setup>
-import BreadCrumb from '@/components/BreadCrumb.vue'
-import {
-	bus
-} from "@/utils/mitt.js"
-import { ref } from 'vue';
-import { Search } from '@element-plus/icons-vue'
-import createAdmin from '../component/createAdmin.vue';
-const input1 = ref('')
+	import BreadCrumb from '@/components/BreadCrumb.vue'
+	import {
+		bus
+	} from "@/utils/mitt.js"
+	import { ref } from 'vue';
+	import { Search } from '@element-plus/icons-vue'
+	import createAdmin from '../component/createAdmin.vue';
+	import editAdmin from '../component/editAdmin.vue';
+	const input1 = ref('')
 
+	// 员工ID
+	const id = localStorage.getItem('id')
 
-// 面包屑
-const breadcrumb = ref()
+	// 面包屑
+	const breadcrumb = ref()
 
-// 面包屑参数
-const item = ref({
-	first: '用户管理',
-	second: '产品管理员'
-})
+	// 面包屑参数
+	const item = ref({
+		first: '用户管理',
+		second: '产品管理员'
+	})
 
-// 表单内容
-const tableData = [
-	{
-		id: 1,
-		account: 'admin',
-		name: '张三',
-		sex: '男',
-		department: '产品部',
-		email: '123456789@qq.com',
-		update_time: '2023-03-15 12:00:00',
-	},
-	{
-		id: 2,
-		account: 'admin',
-		name: '李四',
-		sex: '男',
-		department: '产品部',
-		email: '123456789@qq.com',
-		update_time: '2023-03-15 12:00:00',
-	},
-	{
-		id: 3,
-		account: 'admin',
-		name: '张三',
-		sex: '男',
-		department: '产品部',
-		email: '123456789@qq.com',
-		update_time: '2023-03-15 12:00:00',
-	},
-]
+	// 表单内容
+	const tableData = [
+		{
+			id: 1,
+			account: 'yungakki333',
+			// user_id: 'CB2023122101',
+			name: '张三',
+			sex: '男',
+			department: '产品部',
+			email: '123456789@qq.com',
+			update_time: '2023-03-15 12:00:00',
+		},
+		{
+			id: 2,
+			account: 'admin',
+			user_id: 'CB2023122101',
+			name: '李四',
+			sex: '男',
+			department: '产品部',
+			email: '123456789@qq.com',
+			update_time: '2023-03-15 12:00:00',
+		},
+		{
+			id: 3,
+			account: 'admin',
+			user_id: 'CB2023122103',
+			name: '张三',
+			sex: '男',
+			department: '产品部',
+			email: '123456789@qq.com',
+			update_time: '2023-03-15 12:00:00',
+		},
+	]
 
-// 创建管理员
-const CreateP = ref()
+	// 创建管理员
+	const CreateP = ref()
 
-const openCreateAdmin = (id: number) => {
-	bus.emit('createId', id)
-	CreateP.value.open()
-}
+	const openCreateAdmin = (id : number) => {
+		bus.emit('createId', id)
+		CreateP.value.open()
+	}
+
+	// 编辑管理员
+	const EditP = ref()
+
+	const openEditAdmin = (user_id : string) => {
+		bus.emit('editId', user_id)
+		EditP.value.open()
+	}
 </script>
