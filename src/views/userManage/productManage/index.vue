@@ -8,7 +8,8 @@
 			<div class="table-header">
 				<!-- 搜索框 -->
 				<div class="search-wrapped">
-					<el-input v-model="input1" class="w-50 m-2" size="large" placeholder="输入账号进行搜索" :suffix-icon="Search" />
+					<el-input v-model="input1" class="w-50 m-2" size="large" placeholder="输入账号进行搜索"
+						:suffix-icon="Search" />
 				</div>
 				<!-- 搜索按钮 -->
 				<div class="button-wrapped">
@@ -58,6 +59,9 @@
 	import { Search } from '@element-plus/icons-vue'
 	import createAdmin from '../component/createAdmin.vue';
 	import editAdmin from '../component/editAdmin.vue';
+	import { getAdminList } from '@/api/userInfo.js'
+	import { async } from 'fast-glob';
+
 	const input1 = ref('')
 
 	// 员工ID
@@ -121,4 +125,11 @@
 		bus.emit('editId', user_id)
 		EditP.value.open()
 	}
+
+	// 获取产品管理员列表
+	const getAdminListData = async () => {
+		const res = await getAdminList("产品管理员")
+		console.log(res);
+	}
+	getAdminListData()
 </script>
