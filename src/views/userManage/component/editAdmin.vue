@@ -47,7 +47,7 @@
 	} from "@/utils/mitt.js"
 	import {
 		getUserInfo, editAdmin
-	} from '@/api/userinfo.js'
+	} from '@/api/userInfo.js'
 	import { ElMessage } from 'element-plus'
 
 	// 弹窗开关
