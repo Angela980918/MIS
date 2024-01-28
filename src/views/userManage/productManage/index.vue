@@ -33,7 +33,7 @@
 						<template #default="{ row }">
 							<el-button size="small" type="success"
 								@click="openEditAdmin(row.user_id?row.user_id:row.account)">编辑</el-button>
-							<el-button size="small" type="danger" @click="">删除</el-button>
+							<el-button size="small" type="danger" @click="openDeleteAdmin(row.user_id?row.user_id:row.account)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -45,9 +45,11 @@
 	</div>
 
 	<!-- 添加产品管理员 -->
-	<createAdmin ref="CreateP" />
+	<createAdmin ref="CreateP" @success="getAdminListData" />
 	<!-- 编辑产品管理员 -->
-	<editAdmin ref="EditP" />
+	<editAdmin ref="EditP" @success="getAdminListData" />
+	<!-- 删除管理员 -->
+	<deleteAdmin ref="deleteP" @success="getAdminListData" />
 </template>
 
 <script lang="ts" setup>
@@ -59,6 +61,7 @@
 	import { Search } from '@element-plus/icons-vue'
 	import createAdmin from '../component/createAdmin.vue';
 	import editAdmin from '../component/editAdmin.vue';
+	import deleteAdmin from '../component/deleteAdmin.vue';
 	import { getAdminList } from '@/api/userInfo.js'
 	import { async } from 'fast-glob';
 
@@ -77,38 +80,7 @@
 	})
 
 	// 表单内容
-	const tableData = [
-		{
-			id: 1,
-			account: 'yungakki333',
-			// user_id: 'CB2023122101',
-			name: '张三',
-			sex: '男',
-			department: '产品部',
-			email: '123456789@qq.com',
-			update_time: '2023-03-15 12:00:00',
-		},
-		{
-			id: 2,
-			account: 'admin',
-			user_id: 'CB2023122101',
-			name: '李四',
-			sex: '男',
-			department: '产品部',
-			email: '123456789@qq.com',
-			update_time: '2023-03-15 12:00:00',
-		},
-		{
-			id: 3,
-			account: 'admin',
-			user_id: 'CB2023122103',
-			name: '张三',
-			sex: '男',
-			department: '产品部',
-			email: '123456789@qq.com',
-			update_time: '2023-03-15 12:00:00',
-		},
-	]
+	const tableData = ref([])
 
 	// 创建管理员
 	const CreateP = ref()
@@ -125,11 +97,21 @@
 		bus.emit('editId', user_id)
 		EditP.value.open()
 	}
+	
+	// 删除管理员
+	const deleteP = ref()
+	
+	const openDeleteAdmin = (user_id : string) => {
+		bus.emit('deleteId', user_id)
+		deleteP.value.open()
+	}
 
 	// 获取产品管理员列表
 	const getAdminListData = async () => {
-		const res = await getAdminList("产品管理员")
-		console.log(res);
+		const res = await getAdminList(item.value.second)
+		console.log('getAdminList', res);
+
+		tableData.value = res.result
 	}
 	getAdminListData()
 </script>
