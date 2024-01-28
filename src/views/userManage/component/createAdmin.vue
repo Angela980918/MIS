@@ -42,7 +42,7 @@
 		bus
 	} from "@/utils/mitt.js"
 	import { async } from 'fast-glob';
-	import { createAdmin } from '@/api/userInfo.js'
+	import { createAdmin, getUserInfo, createID } from '@/api/userInfo.js'
 	import { ElMessage } from 'element-plus'
 
 
@@ -121,16 +121,23 @@
 		}
 	})
 
+	const emit = defineEmits(['success'])
+
 	// 确定创建
 	const confirmCreate = async () => {
 		console.log('formData', formData);
 		const res = await createAdmin(formData)
+		const UserInfoRes = await getUserInfo(formData.account)
+		const id = UserInfoRes.result.id
+		// 自动生成员工ID
+		await createID(id)
+
 		if (res.status == 0) {
 			ElMessage({
 				message: res.msg,
 				type: 'success',
 			})
-			// emit('success')
+			emit('success')
 			// bus.emit('adminDialogOff', 1)
 			dialogFormVisible.value = false
 		} else {
