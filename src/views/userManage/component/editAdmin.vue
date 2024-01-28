@@ -9,7 +9,7 @@
 					<div class="inline-flex">
 						<el-input v-model="formData.user_id" disabled
 							style="width: 150px; margin-right: 10px;"></el-input>
-						<el-button v-if="!formData.user_id" type="primary">自动生成ID号</el-button>
+						<el-button v-if="!formData.user_id" type="primary" @click="createUserID">自动生成ID号</el-button>
 					</div>
 				</el-form-item>
 				<el-form-item label="姓名" prop="name">
@@ -46,9 +46,10 @@
 		bus
 	} from "@/utils/mitt.js"
 	import {
-		getUserInfo, editAdmin
+		getUserInfo, editAdmin, createID
 	} from '@/api/userInfo.js'
 	import { ElMessage } from 'element-plus'
+	import { async } from 'fast-glob';
 
 	// 弹窗开关
 	const dialogFormVisible = ref(false)
@@ -63,7 +64,7 @@
 	})
 
 	// 表单接口
-	interface fromData {
+	interface formData {
 		id ?: number,
 		account : string,
 		user_id : string,
@@ -74,7 +75,7 @@
 	}
 
 	// 表单数据
-	const formData : fromData = reactive({
+	const formData : formData = reactive({
 		id: null,
 		account: '',
 		user_id: '',
@@ -115,7 +116,7 @@
 		console.log('editId', user_id);
 		// 获取到当前行的用户基本信息
 		const res = await getUserInfo(user_id)
-		console.log('getUserInfo', res);
+		// console.log('getUserInfo', res);
 		// 枚举
 		Object.assign(formData, {
 			...res.result
@@ -126,6 +127,8 @@
 		bus.all.clear()
 	})
 
+	const emit = defineEmits(['success'])
+
 	// 确认修改信息
 	const confirmEdit = async () => {
 		const res = await editAdmin(formData)
@@ -135,12 +138,32 @@
 				message: res.msg,
 				type: 'success',
 			})
-			// emit('success')
-			// bus.emit('adminDialogOff', 2)
+			emit('success')
 			dialogFormVisible.value = false
 		} else {
 			ElMessage.error(res.msg)
 			dialogFormVisible.value = false
+		}
+	}
+
+	// 自动生产员工ID
+	const createUserID = async () => {
+		const res = await getUserInfo(formData.account)
+		if (res.status == 0) {
+			// 自动生成员工ID
+			await createID(res.result.id)
+			// 重新获取员工信息
+			// 只更新变化的部分
+			const agintRes = await getUserInfo(formData.account)
+			// 遍历新的用户信息对象，只更新发生变化的属性
+			Object.entries(agintRes.result).forEach(([key, newValue]) => {
+				if (formData[key] !== newValue) {
+					console.log('key', key, 'newValue', newValue);
+					formData[key] = newValue;
+				}
+			});
+			emit('success')
+			// dialogFormVisible.value = false
 		}
 	}
 </script>
