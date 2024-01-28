@@ -15,6 +15,17 @@ export const getUserInfo = (id) => {
   });
 };
 
+// 自动生成员工ID--USER_ID
+export const createID = (id) => {
+  return instance({
+    url: "/user/createID",
+    method: "POST",
+    data: {
+      id,
+    },
+  });
+};
+
 // 绑定图片地址跟账号
 export const bindAccount = (account, onlyId, url) => {
   return instance({
