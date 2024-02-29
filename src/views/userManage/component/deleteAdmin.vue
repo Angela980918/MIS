@@ -17,7 +17,7 @@
 		bus
 	} from "@/utils/mitt.js"
 	import {
-		getUserInfo, editAdmin, createID
+		deleteUser
 	} from '@/api/userInfo.js'
 	import { ElMessage } from 'element-plus'
 	import { async } from 'fast-glob';
@@ -36,7 +36,8 @@
 	})
 
 	bus.on('deleteId', async (user_id : string) => {
-		console.log('deleteId', user_id);
+		// console.log('deleteId', user_id);
+		adminId.value = user_id
 	})
 
 	onBeforeUnmount(() => {
@@ -45,7 +46,7 @@
 
 	const emit = defineEmits(['success'])
 
-	// 确认删除
+	// 确认删除(对管理员进行降级)
 	const confirmDelete = async () => {
 		console.log('confirmDelete');
 	}

@@ -98,7 +98,7 @@
 		EditP.value.open()
 	}
 	
-	// 删除管理员
+	// 删除管理员(降级管理员)
 	const deleteP = ref()
 	
 	const openDeleteAdmin = (user_id : string) => {
